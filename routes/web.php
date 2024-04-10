@@ -12,8 +12,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/category', [App\Http\Controllers\CategoryController::class, 'showCategories'])->name('show');
-Route::get('/category2', [App\Http\Controllers\CategoryController::class, 'showCategories2'])->name('show2');
-Route::get('/category3', [App\Http\Controllers\CategoryController::class, 'showCategories3'])->name('show3');
+Route::get('/getCategories', [App\Http\Controllers\CategoryController::class, 'getCategories'])->name('getCategories');
 Route::post('/createCategory', [App\Http\Controllers\CategoryController::class, 'store'])->name('createCategory');
 Route::put('/updateCategory/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('updateCategory');
 Route::delete('/deleteCategory/{id}', [App\Http\Controllers\CategoryController::class, 'delete'])->name('deleteCategory');

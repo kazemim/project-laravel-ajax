@@ -7,22 +7,18 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function showCategories()
-    {
-        $categories = Category::all();
-        return view('category', compact('categories'));
-    }
 
-    public function showCategories2()
+
+    public function showCategories()
+
     {
-        return view('category2');
+        return view('category');
     }
-    
-    public function showCategories3()
+    public function getCategories()
+
     {
         $categories = Category::all();
         return response()->json($categories);
-
     }
 
     // ****************************** store ***************************************************
@@ -37,11 +33,7 @@ class CategoryController extends Controller
         $category = Category::create([
             'title' => $request->title
         ]);
-
         return response()->json(['success' => 'Category created successfully.']);
-
-
-        // return redirect()->route('show');
     }
 
     // ****************************** update **********************************************
@@ -54,11 +46,11 @@ class CategoryController extends Controller
             'title2' => 'required',
         ]);
 
-        $category->update([
+      $catt =  $category->update([
             'title' => $request->title2
         ]);
 
-        return redirect()->route('show');
+        return response()->json(['success' => 'Category updated successfully.']);
     }
 
     // ****************************** delete **********************************************
@@ -69,6 +61,8 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return redirect()->route('show');
+        return response()->json(['success' => 'Category Deleted successfully.']);
+
+
     }
 }
