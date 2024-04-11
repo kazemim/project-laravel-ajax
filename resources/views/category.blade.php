@@ -23,7 +23,8 @@
     <div class="container">
         <h1 class="my-3">Category Setting</h1>
 
-        <button class="my-5 btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Create
+        <button id="btn-openCreate" class="my-5 btn btn-success" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">Create
             Category</button>
 
         {{-- start create post modal --}}
@@ -42,6 +43,7 @@
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Category Name</label>
                                 <input id="name" name="title" type="text" class="form-control">
+                                <span class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
@@ -109,13 +111,12 @@
                 <div class="modal-body">
                     <input type="hidden" id="hidden2">
                     <h5>Are You Shure Delete This Category ?</h5>
-                    <form id="form-delete">
+                    <form>
                         <button id="btnDelete" type="button" data-bs-dismiss="modal"
                             class="btndelete btn btn-danger">Yes</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
@@ -170,6 +171,9 @@
             }
 
             // **************************************** create category with ajax ********************************************
+            $("#btn-openCreate").click(function() {
+                $("#name").next().text('');
+            });
             $("#create-form").submit(function(event) {
                 event.preventDefault();
 
@@ -198,14 +202,18 @@
                         $('#btn-create').removeAttr('disabled');
                         $("#btn-create").html("Submit Category");
                         $(this).find("#name").val('');
+                        $("#name").next().text('');
                     },
 
                     error: function(response) {
-                        alert('Form error');
+                        // code 422 is validate error
+                        if (response.status == 422) {
+                            $('#btn-create').removeAttr('disabled');
+                            $("#btn-create").html("Submit Category");
+                            $("#name").next().text('please fill category name');
+                        }
                     },
                 });
-
-
             });
 
             // **************************************** update category with ajax ********************************************

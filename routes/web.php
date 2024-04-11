@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +18,7 @@ Route::put('/updateCategory/{id}', [App\Http\Controllers\CategoryController::cla
 Route::delete('/deleteCategory/{id}', [App\Http\Controllers\CategoryController::class, 'delete'])->name('deleteCategory');
 
 Route::get('/', [App\Http\Controllers\PostController::class, 'showPosts'])->name('posts.index');
+Route::get('/getPosts', [App\Http\Controllers\PostController::class, 'getPosts'])->name('getPosts');
 Route::post('/createPost', [App\Http\Controllers\PostController::class, 'store'])->name('createPost');
 Route::put('/updatePost/{id}', [App\Http\Controllers\PostController::class, 'update'])->name('updatePost');
 Route::delete('/deletePost/{id}', [App\Http\Controllers\PostController::class, 'delete'])->name('deletePost');

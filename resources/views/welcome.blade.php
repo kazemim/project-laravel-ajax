@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Ajax Project</title>
 
     <!-- Fonts -->
@@ -23,7 +23,8 @@
     <div class="container">
         <h1 class="my-3">ajax project</h1>
         <a href="{{ url('category') }}">click category</a>
-        <button class="my-5 btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Create Post</button>
+        <button class="my-5 btn btn-success" data-bs-toggle="modal" id="open-create"
+            data-bs-target="#exampleModal">Create Post</button>
 
         {{-- start create post modal --}}
         <!-- Modal -->
@@ -37,36 +38,38 @@
                     <div class="modal-body">
                         {{-- ---body post --}}
 
-                        <form method="POST" action="{{ route('createPost') }}" enctype="multipart/form-data">
-                            @csrf
+                        <form id="create-form" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Writer Name</label>
                                 <input name="writer" type="text" class="form-control" id="exampleFormControlInput1">
+                                <span id="span1" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="form-label">Body Post</label>
                                 <textarea name="body" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <span class="text-danger"></span>
                             </div>
                             <div class="mb-3">
                                 <label for="SelectCategory" class="form-label">Select Category</label>
                                 <select name="category_id" id="SelectCategory" class="form-select"
                                     aria-label="Default select example">
                                     <option selected disabled>Open this select category</option>
-
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->title }}</option>
                                     @endforeach
-
                                 </select>
+                                <span class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
                                 <label for="formFile" class="form-label">Select Image</label>
                                 <input name="image" class="form-control" type="file" id="formFile">
+                                <span class="text-danger"></span>
                             </div>
 
                             <div class="mb-3">
-                                <button type="submit" class="btn btn-outline-primary">Submit</button>
+                                <button id="btn-create" type="submit" class="btn btn-outline-primary">Submit
+                                    Post</button>
                             </div>
                         </form>
                     </div>
@@ -88,128 +91,275 @@
             </thead>
             <tbody>
 
-                {{-- foreach --}}
-                @foreach ($posts as $key => $post)
-                    <tr class="">
-                        <th scope="row">{{ ++$key }}</th>
-                        <td>{{ $post->writer }}</td>
-                        <td>
-                            <p>
-                                {{ $post->body }}
-                            </p>
-                        </td>
-                        <td>
-                            <div class="div-img"><img src="{{ asset($post->image) }}" alt="img1"
-                                    class="img-fluid rounded-circle"></div>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#{{$post->id}}">Edit</button>
-
-                            {{-- start edit post modal --}}
-                            <!-- Modal -->
-                            <div class="modal fade" id="{{$post->id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Post</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            {{-- ---body post --}}
-
-                                            <form method="POST" action="{{route('updatePost', $post->id)}}" enctype="multipart/form-data">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="mb-3">
-                                                    <label for="exampleFormControlInput1" class="form-label">Writer
-                                                        Name</label>
-                                                    <input name="writer" type="text" class="form-control" value="{{$post->writer}}"
-                                                        id="exampleFormControlInput1">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="exampleFormControlTextarea1" class="form-label">Body
-                                                        Post</label>
-                                                    <textarea name="body" class="form-control" id="exampleFormControlTextarea1" rows="3">{{$post->body}}</textarea>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="SelectCategory" class="form-label">Select
-                                                        Category</label>
-                                                    <select name="category_id" id="SelectCategory" class="form-select"
-                                                        aria-label="Default select example">
-                                                        <option selected disabled>Open this select category</option>
-                                                        @foreach ($categories as $category)
-                                                        <option  value="{{ $category->id }}">{{ $category->title }}</option>
-                                                    @endforeach
-
-                                                    </select>
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <label for="formFile" class="form-label">Select Image</label>
-                                                    <input name="image" class="form-control" type="file" id="formFile">
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <button type="submit" class="btn btn-outline-primary">Update
-                                                        Post</button>
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- end edit post modal --}}
-
-                            <button class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#deletePost">Delete</button>
-                            {{-- start delete post modal --}}
-                            <!-- Modal -->
-                            <div class="modal fade" id="deletePost" tabindex="-1"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Post</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-
-                                            <h5>Are You Shure Delete This Post ?</h5>
-                                            <form action="{{ route('deletePost', $post->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Yes</button>
-                                                <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">No</button>
-                                            </form>
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            {{-- end delete post modal --}}
-                        </td>
-                    </tr>
-                @endforeach
-
-                {{-- end foreach --}}
-
 
             </tbody>
         </table>
 
     </div>
+    {{-- **************************************   edit modal ************************************************ --}}
+    {{-- start edit post modal --}}
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Post</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{-- ---body post --}}
+
+                    <form id="update-form" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <input name="hidden1" type="hidden" class="form-control" id="hidden1">
+                            <label for="exampleFormControlInput1" class="form-label">Writer
+                                Name</label>
+                            <input id="writer2" name="writer" type="text" class="form-control"
+                                id="exampleFormControlInput1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Body
+                                Post</label>
+                            <textarea name="body" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="SelectCategory" class="form-label">Select
+                                Category</label>
+                            <select name="category_id" id="SelectCategory" class="form-select"
+                                aria-label="Default select example">
+                                <option selected disabled>Open this select category</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="formFile" class="form-label">Select Image</label>
+                            <input name="image" class="form-control" type="file" id="formFile">
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" id="btn-update" class="btn btn-outline-primary">Update
+                                Post</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {{-- end edit post modal --}}
+
 
 
     {{-- java script --}}
+    {{-- ***************************************   delete modal     ******************************************** --}}
+    {{-- start delete post modal --}}
+    <!-- Modal -->
+    <div class="modal fade" id="deletePost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Post</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="hidden2">
+                    <h5>Are You Shure Delete This Post ?</h5>
+                    <form>
+                        <button type="button" id="btnDelete" class="btn btn-danger"
+                            data-bs-dismiss="modal">Yes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {{-- end delete post modal --}}
+
+
+    {{-- ************************************* java script****************************************************** --}}
     <script type="module">
         $(document).ready(function() {
+
+            fetchAllPost();
+
+            function fetchAllPost() {
+                $.ajax({
+                    type: 'GET',
+                    url: "/getPosts",
+                    dataType: "json",
+
+                    success: (result) => {
+                        let output2 = "";
+                        result.forEach((post, index) => {
+                            output2 += `<tr>
+                              <th scope="row">${++index}</th>
+                              <td>${post.writer}</td>
+                              <td>${post.body}</td>
+                              <td>
+                               <div class="div-img"><img src="${post.image}" alt="img1"
+                                    class="img-fluid rounded-circle"></div>
+                              </td>
+                              <td>
+                              <button type="button" class="btnEdit btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">Edit</button>
+                              <button type="button" class="btndel btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePost">Delete</button>
+                               </td>
+                               <td class='d-none'>${post.id}</td>
+                               <td class='d-none'>${post.category.id}</td>
+                               </tr>
+                                    `;
+                        });
+                        $("tbody").html(output2);
+
+                        // -------------- btn for show edit modal -----------------------------------
+                        $(".btnEdit").click(function() {
+                            let writer = $(this).parent().siblings("td:nth-of-type(1)").text();
+                            let body = $(this).parent().siblings("td:nth-of-type(2)").text();
+                            let image = $(this).parent().siblings("div img").attr('src');
+                            let hidden1 = $(this).parent().siblings("td:nth-of-type(5)").text();
+                            let select = $(this).parent().siblings("td:nth-of-type(6)").text();
+
+                            $("#writer2").val(`${writer}`);
+                            $("textarea").val(`${body}`);
+                            $("#hidden1").val(`${hidden1}`);
+                            $("select").val(`${select}`);
+                        });
+
+                        // --------------------- btn for show dialog delete user -------------------------------
+                        $(".btndel").on("click", function() {
+
+                            let id = $(this).parent().next().text();
+                            $("#hidden2").val(`${id}`);
+                        });
+                    },
+                });
+            }
+            // ----------------------------------------------------------------------
+
+            // *********************************** create post ***********************************************
+            $("#open-create").click(function() {
+                $("#create-form").find('input, textarea, select').val('');
+                $("#create-form").find("span").text("");
+            });
+            $("#create-form").submit(function(event) {
+                event.preventDefault();
+
+                $('#btn-create').attr('disabled', 'true');
+                let btnSending = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                   <span role="status">Sending Data...</span>`;
+                $("#btn-create").html(btnSending);
+
+                let formData = new FormData(this);
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/createPost',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+
+                    success: (response) => {
+                        fetchAllPost();
+                        $('#btn-create').removeAttr('disabled');
+                        $("#btn-create").html("Submit Post");
+                        $(this).find('input, textarea, select').val('');
+                        $(this).find("span").text('');
+                    },
+
+                    error: function(response) {
+                        // code 422 is validate error
+                        if (response.status == 422) {
+                            $('#btn-create').removeAttr('disabled');
+                            $("#btn-create").html("Submit Post");
+                            let inputGroup = $(this).find('input, textarea, select');
+                            $("#create-form").find("span").text("please fill");
+                        }
+                    },
+                });
+            });
+
+            // **************************************** update post with ajax ********************************************
+
+            $("#update-form").submit(function(event) {
+
+                event.preventDefault();
+
+                $('#btn-update').attr('disabled', 'true');
+                let btnSending = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                 <span role="status">Updating Data...</span>`;
+                $("#btn-update").html(btnSending);
+
+                let formData = new FormData(this);
+                let id = $(this).find("#hidden1").val();
+                formData.append("_method", "PUT");
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: `/updatePost/${id}`,
+                    data: formData,
+                    // cache:false,
+                    contentType: false,
+                    processData: false,
+
+                    success: (response) => {
+                        fetchAllPost();
+                        $('#btn-update').removeAttr('disabled');
+                        $("#btn-update").html("Update Category");
+                    },
+
+                    error: function(response) {
+                        alert('Form error');
+                    },
+                });
+            });
+            // ************************************* delete *****************************************************
+            $("#btnDelete").click(function(event) {
+
+                $(this).attr('disabled', 'true');
+                let btnSending = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                   <span role="status">Deleting Data...</span>`;
+                $(this).html(btnSending);
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content')
+                    }
+                });
+
+                let id = $(this).parent().siblings('input').val();
+
+                $.ajax({
+                    type: 'DELETE',
+                    dataType: "json",
+                    url: `/deletePost/${id}`,
+
+                    success: (response) => {
+                        fetchAllPost();
+                        $(this).removeAttr('disabled');
+                        $(this).html("Yes");
+                    },
+
+                    error: function(response) {
+                        alert('Form error');
+                    },
+                });
+            });
+
+
 
 
             // ======================================

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,7 @@ class CategoryController extends Controller
     {
         return view('category');
     }
+    // *********************************** get categories**************************************
     public function getCategories()
 
     {
@@ -21,7 +23,7 @@ class CategoryController extends Controller
         return response()->json($categories);
     }
 
-    // ****************************** store ***************************************************
+    // *************************************** store ***************************************************
 
     public function store(Request $request)
     {
@@ -30,7 +32,7 @@ class CategoryController extends Controller
             'title' => 'required',
         ]);
 
-        $category = Category::create([
+        Category::create([
             'title' => $request->title
         ]);
         return response()->json(['success' => 'Category created successfully.']);
@@ -46,7 +48,7 @@ class CategoryController extends Controller
             'title2' => 'required',
         ]);
 
-      $catt =  $category->update([
+        $category->update([
             'title' => $request->title2
         ]);
 
@@ -62,7 +64,5 @@ class CategoryController extends Controller
         $category->delete();
 
         return response()->json(['success' => 'Category Deleted successfully.']);
-
-
     }
 }

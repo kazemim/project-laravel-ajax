@@ -8,12 +8,18 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+
     public function showPosts()
     {
-        $posts = Post::all();
         $categories = Category::all();
-        return view('welcome', compact('posts','categories'));
-        // return view('welcome', compact('categories'));
+        return view('welcome',compact('categories'));
+    }
+
+    // ************************************** create post ************************************************
+    public function getPosts()
+    {
+        $posts = Post::with('category')->get();
+        return response()->json($posts);
     }
 
     // ************************************** create post ************************************************
@@ -37,10 +43,8 @@ class PostController extends Controller
             'body' => $request->body,
             'image' => $request->image->move($path, $imageName),
             'category_id'=>$request->category_id,
-
         ]);
-
-        return redirect()->route('posts.index');
+        return response()->json(['success' => 'post created successfully.']);
     }
     // *********************************************** update ******************************************************
     public function update(Request $request, $id)
@@ -66,8 +70,7 @@ class PostController extends Controller
             'category_id'=>$request->category_id,
 
         ]);
-
-        return redirect()->route('posts.index');
+        return response()->json(['success' => 'Post updated successfully.']);
     }
     // ************************************************** delete *******************************************************
     public function delete($id)
@@ -77,6 +80,6 @@ class PostController extends Controller
 
         $post->delete();
 
-        return redirect()->route('posts.index');
+        return response()->json(['success' => 'Post deleted successfully.']);
     }
 }
