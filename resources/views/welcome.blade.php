@@ -13,6 +13,11 @@
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/css/app.css'])
 
+    <style>
+        #create-form .span-validate {
+            display: none;
+        }
+    </style>
 
     <!-- Styles -->
 
@@ -42,33 +47,32 @@
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Writer Name</label>
                                 <input name="writer" type="text" class="form-control" id="exampleFormControlInput1">
-                                <span id="span1" class="text-danger"></span>
+                                <span id="span1" class="span-validate text-danger">please fill writer</span>
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="form-label">Body Post</label>
                                 <textarea name="body" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                <span class="text-danger"></span>
+                                <span class="span-validate text-danger">please fill body</span>
                             </div>
                             <div class="mb-3">
                                 <label for="SelectCategory" class="form-label">Select Category</label>
                                 <select name="category_id" id="SelectCategory" class="form-select"
                                     aria-label="Default select example">
-                                    <option selected disabled>Open this select category</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->title }}</option>
                                     @endforeach
                                 </select>
-                                <span class="text-danger"></span>
+                                <span class="span-validate text-danger">please fill category</span>
                             </div>
 
                             <div class="mb-3">
                                 <label for="formFile" class="form-label">Select Image</label>
                                 <input name="image" class="form-control" type="file" id="formFile">
-                                <span class="text-danger"></span>
+                                <span class="span-validate text-danger">please fill file</span>
                             </div>
 
                             <div class="mb-3">
-                                <button id="btn-create" type="submit" class="btn btn-outline-primary">Submit
+                                <button id="btn-create" type="submit" class="btn btn-success">Submit
                                     Post</button>
                             </div>
                         </form>
@@ -135,8 +139,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="formFile" class="form-label">Select Image</label>
-                            <input name="image" class="form-control" type="file" id="formFile">
+                            <label for="formFile2" class="form-label">Select Image</label>
+                            <input name="image" class="form-control" type="file" id="formFile2">
                         </div>
 
                         <div class="mb-3">
@@ -216,7 +220,12 @@
                         $("tbody").html(output2);
 
                         // -------------- btn for show edit modal -----------------------------------
+                        // document.querySelectorAll(".btnEdit").forEach((item) => {
+                        //     item.addEventListener('click', function() {
+                        //     });
+                        // });
                         $(".btnEdit").click(function() {
+                            $("#formFile2").val('');
                             let writer = $(this).parent().siblings("td:nth-of-type(1)").text();
                             let body = $(this).parent().siblings("td:nth-of-type(2)").text();
                             let image = $(this).parent().siblings("div img").attr('src');
@@ -242,8 +251,8 @@
 
             // *********************************** create post ***********************************************
             $("#open-create").click(function() {
-                $("#create-form").find('input, textarea, select').val('');
-                $("#create-form").find("span").text("");
+                $("#create-form").find('input, textarea').val('');
+                $("#create-form").find('select').val('1');
             });
             $("#create-form").submit(function(event) {
                 event.preventDefault();
@@ -272,16 +281,17 @@
                         $('#btn-create').removeAttr('disabled');
                         $("#btn-create").html("Submit Post");
                         $(this).find('input, textarea, select').val('');
-                        $(this).find("span").text('');
                     },
 
                     error: function(response) {
+                        // let inputGroup = $("#create-form").find('input, textarea, select');
+                        //     $(inputGroup).each(function(){
+                        //         console.log($(this).val());
+                        //     });
                         // code 422 is validate error
                         if (response.status == 422) {
-                            $('#btn-create').removeAttr('disabled');
-                            $("#btn-create").html("Submit Post");
-                            let inputGroup = $(this).find('input, textarea, select');
-                            $("#create-form").find("span").text("please fill");
+                            // $('#btn-create').removeAttr('disabled');
+                            // $("#btn-create").html("Submit Post");
                         }
                     },
                 });
@@ -290,6 +300,7 @@
             // **************************************** update post with ajax ********************************************
 
             $("#update-form").submit(function(event) {
+
 
                 event.preventDefault();
 

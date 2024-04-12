@@ -136,6 +136,7 @@
                     dataType: "json",
 
                     success: (result) => {
+                        console.log(result);
                         let output2 = "";
                         result.forEach((cat, index) => {
                             output2 += `<tr>
