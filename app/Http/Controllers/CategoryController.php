@@ -15,7 +15,7 @@ class CategoryController extends Controller
     {
         return view('category');
     }
-    // *********************************** get categories**************************************
+    // *********************************** get categories*******************************************
     public function getCategories()
 
     {
@@ -35,6 +35,7 @@ class CategoryController extends Controller
         Category::create([
             'title' => $request->title
         ]);
+
         return response()->json(['success' => 'Category created successfully.']);
     }
 

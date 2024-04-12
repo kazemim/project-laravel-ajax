@@ -39,6 +39,10 @@
                     <div class="modal-body">
                         {{-- ---body post --}}
 
+                        <div class="alert alert-danger print-error-msg" style="display:none">
+                            <ul></ul>
+                        </div>
+
                         <form id="create-form">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Category Name</label>
@@ -123,12 +127,13 @@
 
 
 
-    {{-- java script --}}
+    {{-- ******************************************* java script ********************************************* --}}
     <script type="module">
         $(document).ready(function() {
 
             fetchAllCategory();
 
+            // **************************************** fetch all category with ajax *****************************************
             function fetchAllCategory() {
                 $.ajax({
                     type: 'GET',
@@ -136,7 +141,6 @@
                     dataType: "json",
 
                     success: (result) => {
-                        console.log(result);
                         let output2 = "";
                         result.forEach((cat, index) => {
                             output2 += `<tr>
@@ -152,7 +156,7 @@
                         });
                         $("tbody").html(output2);
 
-                        // -------------- btn for show edit modal -----------------------------------
+                        // ---------------------- btn for show edit modal -----------------------------------
                         $(".btnEdit").on("click", function() {
 
                             let name = $(this).parent().siblings("td:nth-of-type(1)").text();
@@ -161,7 +165,7 @@
                             $("#name1").val(`${name}`);
                             $("#hidden1").val(`${hidden1}`);
                         });
-                        // --------------------- btn for show dialog delete user -------------------------------
+                        // --------------------- btn for show dialog delete user ----------------------------
                         $(".btndel").on("click", function() {
 
                             let id = $(this).parent().siblings('td:nth-of-type(2)').text();
@@ -173,7 +177,8 @@
 
             // **************************************** create category with ajax ********************************************
             $("#btn-openCreate").click(function() {
-                $("#name").next().text('');
+                $("#create-form").find('#name').val('');
+                $(".print-error-msg").css('display', 'none');
             });
             $("#create-form").submit(function(event) {
                 event.preventDefault();
@@ -200,25 +205,29 @@
 
                     success: (response) => {
                         fetchAllCategory();
+                        $(".print-error-msg").css('display', 'none');
                         $('#btn-create').removeAttr('disabled');
                         $("#btn-create").html("Submit Category");
                         $(this).find("#name").val('');
-                        $("#name").next().text('');
                     },
 
                     error: function(response) {
-                        // code 422 is validate error
-                        if (response.status == 422) {
-                            $('#btn-create').removeAttr('disabled');
-                            $("#btn-create").html("Submit Category");
-                            $("#name").next().text('please fill category name');
-                        }
+
+                        $('#btn-create').removeAttr('disabled');
+                        $("#btn-create").html("Submit Category");
+                        let msg = response.responseJSON.errors;
+                        $(".print-error-msg").find("ul").html('');
+                        $(".print-error-msg").css('display', 'block');
+                        $.each(msg, function(key, value) {
+                            $(".print-error-msg").find("ul").append('<li>' + value +
+                                '</li>');
+                        });
+
                     },
                 });
             });
 
             // **************************************** update category with ajax ********************************************
-
             $("#update-form").submit(function(event) {
 
                 event.preventDefault();
@@ -254,7 +263,8 @@
                     },
                 });
             });
-            // ************************************* delete *****************************************************
+
+            // ************************************************* delete *****************************************************
             $("#btnDelete").click(function(event) {
 
                 $(this).attr('disabled', 'true');
@@ -287,8 +297,9 @@
                     },
                 });
             });
+            // *************************************************************************************************************
 
-            // ========================================================================
+            // ========================================== end of ready document ============================================
         });
     </script>
 </body>

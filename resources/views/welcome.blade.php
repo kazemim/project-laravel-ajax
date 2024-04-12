@@ -43,6 +43,10 @@
                     <div class="modal-body">
                         {{-- ---body post --}}
 
+                        <div class="alert alert-danger print-error-msg" style="display:none">
+                            <ul></ul>
+                        </div>
+
                         <form id="create-form" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Writer Name</label>
@@ -156,7 +160,6 @@
     {{-- end edit post modal --}}
 
 
-
     {{-- java script --}}
     {{-- ***************************************   delete modal     ******************************************** --}}
     {{-- start delete post modal --}}
@@ -185,12 +188,13 @@
     {{-- end delete post modal --}}
 
 
-    {{-- ************************************* java script****************************************************** --}}
+    {{-- *********************************************** java script ************************************************* --}}
     <script type="module">
         $(document).ready(function() {
 
             fetchAllPost();
 
+            // **************************************** fetch all Posts with ajax **************************************
             function fetchAllPost() {
                 $.ajax({
                     type: 'GET',
@@ -219,11 +223,8 @@
                         });
                         $("tbody").html(output2);
 
-                        // -------------- btn for show edit modal -----------------------------------
-                        // document.querySelectorAll(".btnEdit").forEach((item) => {
-                        //     item.addEventListener('click', function() {
-                        //     });
-                        // });
+                        // ------------------- btn for show edit modal -----------------------------------
+
                         $(".btnEdit").click(function() {
                             $("#formFile2").val('');
                             let writer = $(this).parent().siblings("td:nth-of-type(1)").text();
@@ -238,7 +239,7 @@
                             $("select").val(`${select}`);
                         });
 
-                        // --------------------- btn for show dialog delete user -------------------------------
+                        // ------------------------- btn for show dialog delete user -------------------------------
                         $(".btndel").on("click", function() {
 
                             let id = $(this).parent().next().text();
@@ -247,11 +248,11 @@
                     },
                 });
             }
-            // ----------------------------------------------------------------------
-
-            // *********************************** create post ***********************************************
+            
+            // ****************************************** create post *************************************************
             $("#open-create").click(function() {
                 $("#create-form").find('input, textarea').val('');
+                $(".print-error-msg").css('display', 'none');
                 $("#create-form").find('select').val('1');
             });
             $("#create-form").submit(function(event) {
@@ -278,27 +279,29 @@
 
                     success: (response) => {
                         fetchAllPost();
+                        $(".print-error-msg").css('display', 'none');
                         $('#btn-create').removeAttr('disabled');
                         $("#btn-create").html("Submit Post");
                         $(this).find('input, textarea, select').val('');
                     },
 
                     error: function(response) {
-                        // let inputGroup = $("#create-form").find('input, textarea, select');
-                        //     $(inputGroup).each(function(){
-                        //         console.log($(this).val());
-                        //     });
-                        // code 422 is validate error
-                        if (response.status == 422) {
-                            // $('#btn-create').removeAttr('disabled');
-                            // $("#btn-create").html("Submit Post");
-                        }
+
+                        $('#btn-create').removeAttr('disabled');
+                        $("#btn-create").html("Submit Post");
+
+                        let msg = response.responseJSON.errors;
+                        $(".print-error-msg").find("ul").html('');
+                        $(".print-error-msg").css('display', 'block');
+                        $.each(msg, function(key, value) {
+                            $(".print-error-msg").find("ul").append('<li>' + value +
+                                '</li>');
+                        });
                     },
                 });
             });
 
             // **************************************** update post with ajax ********************************************
-
             $("#update-form").submit(function(event) {
 
 
@@ -336,7 +339,8 @@
                     },
                 });
             });
-            // ************************************* delete *****************************************************
+
+            // ******************************************** delete *************************************************
             $("#btnDelete").click(function(event) {
 
                 $(this).attr('disabled', 'true');
@@ -369,11 +373,9 @@
                     },
                 });
             });
+            // *****************************************************************************************************
 
-
-
-
-            // ======================================
+            // ==================================== end of ready document ==========================================
         });
     </script>
 </body>

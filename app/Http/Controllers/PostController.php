@@ -9,13 +9,14 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
 
+    // ************************************** show index posts **********************************************
     public function showPosts()
     {
         $categories = Category::all();
-        return view('welcome',compact('categories'));
+        return view('welcome', compact('categories'));
     }
 
-    // ************************************** create post ************************************************
+    // ************************************** get all posts ************************************************
     public function getPosts()
     {
         $posts = Post::with('category')->get();
@@ -42,11 +43,13 @@ class PostController extends Controller
             'writer' => $request->writer,
             'body' => $request->body,
             'image' => $request->image->move($path, $imageName),
-            'category_id'=>$request->category_id,
+            'category_id' => $request->category_id,
         ]);
+
+        // this return not important
         return response()->json(['success' => 'post created successfully.']);
     }
-    // *********************************************** update ******************************************************
+    // ***************************************** update post *******************************************
     public function update(Request $request, $id)
 
     {
@@ -67,19 +70,18 @@ class PostController extends Controller
             'writer' => $request->writer,
             'body' => $request->body,
             'image' => $request->image->move($path, $imageName),
-            'category_id'=>$request->category_id,
-
+            'category_id' => $request->category_id,
         ]);
+        // this return not important
         return response()->json(['success' => 'Post updated successfully.']);
     }
-    // ************************************************** delete *******************************************************
+    // *************************************** delete post *****************************************
     public function delete($id)
     {
-
         $post = Post::find($id);
 
         $post->delete();
-
+        // this return not important
         return response()->json(['success' => 'Post deleted successfully.']);
     }
 }
