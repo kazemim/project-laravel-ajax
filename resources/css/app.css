@@ -12,3 +12,14 @@ a{
     display: block;
     font-size: 20px;
 }
+
+#create-form1 .span-validate {
+    display: none;
+}
+
+.btn-category.clickChange
+{
+    background-color: blue;
+    color: white;
+}
+

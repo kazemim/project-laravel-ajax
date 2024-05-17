@@ -3,9 +3,6 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
 Auth::routes();
 
@@ -17,11 +14,17 @@ Route::post('/createCategory', [App\Http\Controllers\CategoryController::class, 
 Route::put('/updateCategory/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('updateCategory');
 Route::delete('/deleteCategory/{id}', [App\Http\Controllers\CategoryController::class, 'delete'])->name('deleteCategory');
 
+Route::get('/sub-category', [App\Http\Controllers\SubCategoryController::class, 'showSubCategories'])->name('showSub');
+Route::get('/getSubCategory', [App\Http\Controllers\SubCategoryController::class, 'getSubCategories'])->name('getSub');
+
+
 Route::get('/', [App\Http\Controllers\PostController::class, 'showPosts'])->name('posts.index');
 Route::get('/getPosts', [App\Http\Controllers\PostController::class, 'getPosts'])->name('getPosts');
 Route::post('/createPost', [App\Http\Controllers\PostController::class, 'store'])->name('createPost');
 Route::put('/updatePost/{id}', [App\Http\Controllers\PostController::class, 'update'])->name('updatePost');
 Route::delete('/deletePost/{id}', [App\Http\Controllers\PostController::class, 'delete'])->name('deletePost');
+
+
 
 
 

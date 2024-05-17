@@ -1,30 +1,14 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.master')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@section('title', 'categories')
 
-    <title>Category</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
-    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/css/app.css'])
-
-    <!-- Styles -->
-
-</head>
-
-<body>
+@section('content')
 
     <div class="container">
         <h1 class="my-3">Category Setting</h1>
+        <h2><a href="{{ route('showSub') }}">go to sub category</a></h2>
 
-        <button id="btn-openCreate" class="my-5 btn btn-success" data-bs-toggle="modal"
-            data-bs-target="#exampleModal">Create
+        <button id="btn-openCreate" class="my-5 btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Create
             Category</button>
 
         {{-- start create post modal --}}
@@ -144,15 +128,15 @@
                         let output2 = "";
                         result.forEach((cat, index) => {
                             output2 += `<tr>
-                              <th scope="row">${++index}</th>
-                              <td>${cat.title}</td>
-                              <td class='d-none'>${cat.id}</td>
-                              <td>
-                              <button type="button" class="btnEdit btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">Edit</button>
-                              <button type="button" class="btndel btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal3">Delete</button>
-                               </td>
-                               </tr>
-                                    `;
+                          <th scope="row">${++index}</th>
+                          <td>${cat.title}</td>
+                          <td class='d-none'>${cat.id}</td>
+                          <td>
+                          <button type="button" class="btnEdit btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">Edit</button>
+                          <button type="button" class="btndel btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal3">Delete</button>
+                           </td>
+                           </tr>
+                                `;
                         });
                         $("tbody").html(output2);
 
@@ -185,7 +169,7 @@
 
                 $('#btn-create').attr('disabled', 'true');
                 let btnSending = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                                   <span role="status">Sending Data...</span>`;
+                               <span role="status">Sending Data...</span>`;
                 $("#btn-create").html(btnSending);
 
                 let formData = new FormData(this);
@@ -234,7 +218,7 @@
 
                 $('#btn-update').attr('disabled', 'true');
                 let btnSending = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                                 <span role="status">Updating Data...</span>`;
+                             <span role="status">Updating Data...</span>`;
                 $("#btn-update").html(btnSending);
 
                 let formData = new FormData(this);
@@ -269,7 +253,7 @@
 
                 $(this).attr('disabled', 'true');
                 let btnSending = `<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                <span role="status">Deleting Data...</span>`;
+            <span role="status">Deleting Data...</span>`;
                 $(this).html(btnSending);
 
                 $.ajaxSetup({
@@ -302,6 +286,4 @@
             // ========================================== end of ready document ============================================
         });
     </script>
-</body>
-
-</html>
+@endsection

@@ -13,7 +13,7 @@ class PostController extends Controller
     public function showPosts()
     {
         $categories = Category::all();
-        return view('welcome', compact('categories'));
+        return view('post', compact('categories'));
     }
 
     // ************************************** get all posts ************************************************
