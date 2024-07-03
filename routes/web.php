@@ -25,6 +25,10 @@ Route::put('/updatePost/{id}', [App\Http\Controllers\PostController::class, 'upd
 Route::delete('/deletePost/{id}', [App\Http\Controllers\PostController::class, 'delete'])->name('deletePost');
 
 
+Route::get('/test', [App\Http\Controllers\TestController::class, 'test'])->name('test');
+
+
+
 
 
 

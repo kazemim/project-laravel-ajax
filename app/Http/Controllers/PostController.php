@@ -34,15 +34,18 @@ class PostController extends Controller
             'image' => 'required',
         ]);
 
-        $path = 'images/';
-        !is_dir($path) &&
-            mkdir($path, 0777, true);
-        $imageName = time() . '.' . $request->image->extension();
+        // $path = 'images/';
+        // !is_dir($path) &&
+        //     mkdir($path, 0777, true);
+        // $imageName = time() . '.' . $request->image->extension();
 
+        $fileName = time().'_'.$request->image->getClientOriginalName();
+        $request->image->storeAs('images',$fileName);
         Post::create([
             'writer' => $request->writer,
             'body' => $request->body,
-            'image' => $request->image->move($path, $imageName),
+            // 'image' => $request->image->move($path, $imageName),
+            'image' => $fileName,
             'category_id' => $request->category_id,
         ]);
 
