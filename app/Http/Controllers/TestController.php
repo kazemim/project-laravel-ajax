@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Country;
 use App\Models\Profile;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -25,7 +26,11 @@ class TestController extends Controller
         // dd($result);
 
 
-        $category = Category::find(1);
-        dd($category->comments);
+        // $category = Category::find(1);
+        // dd($category->comments);
+
+
+        $country = Country::find(1);
+        dd($country->cars);
     }
 }
