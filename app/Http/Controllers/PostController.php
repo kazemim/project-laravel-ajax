@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -39,12 +40,11 @@ class PostController extends Controller
         //     mkdir($path, 0777, true);
         // $imageName = time() . '.' . $request->image->extension();
 
-        $fileName = time().'_'.$request->image->getClientOriginalName();
-        $request->image->storeAs('images',$fileName);
+        $fileName = time() . '_' . $request->image->getClientOriginalName();
+        $request->image->storeAs('/images/', $fileName);
         Post::create([
             'writer' => $request->writer,
             'body' => $request->body,
-            // 'image' => $request->image->move($path, $imageName),
             'image' => $fileName,
             'category_id' => $request->category_id,
         ]);
@@ -61,18 +61,19 @@ class PostController extends Controller
             'writer' => 'required',
             'category_id' => 'required|exists:categories,id',
             'body' => 'required',
-            'image' => 'required',
+            'image' => 'nullable|max:2000|image',
         ]);
 
-        $path = 'images/';
-        !is_dir($path) &&
-            mkdir($path, 0777, true);
-        $imageName = time() . '.' . $request->image->extension();
+        if ($request->hasFile('image')) {
+            Storage::delete('/imags/' . $post->image);
+            $fileName = time() . '_' . $request->image->getClientOriginalName();
+            $request->image->storeAs('/images/', $fileName);
+        }
 
         $post->update([
             'writer' => $request->writer,
             'body' => $request->body,
-            'image' => $request->image->move($path, $imageName),
+            'image' => $request->hasFile('image') ? $fileName : $post->image,
             'category_id' => $request->category_id,
         ]);
         // this return not important

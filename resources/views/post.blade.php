@@ -170,7 +170,7 @@
 <script type="module">
     $(document).ready(function() {
 
-        fetchAllPost();
+       fetchAllPost();
 
         // **************************************** fetch all Posts with ajax **************************************
         function fetchAllPost() {
@@ -187,7 +187,7 @@
                           <td>${post.writer}</td>
                           <td>${post.body}</td>
                           <td>
-                           <div class="div-img"><img src="${post.image}" alt="img1"
+                           <div class="div-img"><img src="images/${post.image}" alt="img1"
                                 class="img-fluid rounded-circle"></div>
                           </td>
                           <td>
